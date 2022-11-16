@@ -26,7 +26,7 @@ int main()
  B = 5*(sin(3*x));
  else
  if (x>=1.2)
- B = tan(x+2);
+ B = tan(x)+2;
  else
  B =atan((x+1)/4);
  y = A - B;
