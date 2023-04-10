@@ -1,95 +1,98 @@
 // Lab_7_1.cpp
-// < Шикітки Миколи >
+
+// <Шикітка Микола>
+
 // Лабораторна робота № 7.1.
-// Пошук заданих елементів та впорядкування рядків/стовпчиків матриці.
-// Варіант 34
+// Пошук заданих елементів та впорядкування рядків / стовпчиків матриці.
+// Варіант 21
 #include <iostream>
 #include <iomanip>
 #include <time.h>
 using namespace std;
-void Create(int** R, const int rowCount, const int colCount, const int Low,const int High);
-void Print(int** R, const int rowCount, const int colCount);
-void Sort(int** R, const int rowCount, const int colCount);
-void Change(int** R, const int row1, const int row2, const int colCount);
-void Filter(int** R, const int rowCount, const int colCount, int& S, int& k);
-
-
+void Create(int** a, const int rowCount, const int colCount, const int Low,
+	const int High);
+void Print(int** a, const int rowCount, const int colCount);
+void Sort(int** a, const int rowCount, const int colCount);
+void Change(int** a, const int row1, const int row2, const int colCount);
+void Calc(int** a, const int rowCount, const int colCount, int& S, int& k);
 int main()
 {
 	srand((unsigned)time(NULL));
-	int Low = -26;
-	int High = 23;
+	int Low = -21;
+	int High = 18;
 	int rowCount = 8;
-	int colCount = 6;
-	int** R = new int* [rowCount];
+	int colCount = 7;
+	int** a = new int* [rowCount];
 	for (int i = 0; i < rowCount; i++)
-		R[i] = new int[colCount];
-	Create(R, rowCount, colCount, Low, High);
-	Print(R, rowCount, colCount);
-	Sort(R, rowCount, colCount);
-	Print(R, rowCount, colCount);
+		a[i] = new int[colCount];
+	Create(a, rowCount, colCount, Low, High);
+	Print(a, rowCount, colCount);
+	Sort(a, rowCount, colCount);
+	Print(a, rowCount, colCount);
 	int S = 0;
 	int k = 0;
-	Filter(R, rowCount, colCount, S, k);
+	Calc(a, rowCount, colCount, S, k);
 	cout << "S = " << S << endl;
 	cout << "k = " << k << endl;
-	Print(R, rowCount, colCount);
+	Print(a, rowCount, colCount);
 	for (int i = 0; i < rowCount; i++)
-		delete[] R[i];
-	delete[] R;
+		delete[] a[i];
+	delete[] a;
 	return 0;
 }
-void Create(int** R, const int rowCount, const int colCount, const int Low, const int High)
+void Create(int** a, const int rowCount, const int colCount, const int Low,
+	const int High)
 {
 	for (int i = 0; i < rowCount; i++)
 		for (int j = 0; j < colCount; j++)
-			R[i][j] = Low + rand() % (High - Low + 1);
+			a[i][j] = Low + rand() % (High - Low + 1);
 }
-void Print(int** R, const int rowCount, const int colCount)
+void Print(int** a, const int rowCount, const int colCount)
 {
 	cout << endl;
 	for (int i = 0; i < rowCount; i++)
 	{
 		for (int j = 0; j < colCount; j++)
-			cout << setw(4) << R[i][j];
+			cout << setw(4) << a[i][j];
 		cout << endl;
 	}
 	cout << endl;
 }
-void Sort(int** R, const int rowCount, const int colCount)
+void Sort(int** a, const int rowCount, const int colCount)
 {
-	for (int i0 = 0; i0 < colCount - 1; i0++)
-		for (int i1 = 0; i1 < colCount - i0 - 1; i1++)
-			if ((R[0][i1] > R[0][i1 + 1])
+	for (int i0 = 0; i0 < rowCount - 1; i0++)
+		for (int i1 = 0; i1 > rowCount - i0 - 1; i1++)
+			if ((a[i1][0] < a[i1 + 1][0])
 				||
-				(R[0][i1] == R[0][i1 + 1] &&
-					R[1][i1] < R[1][i1 + 1])
+				(a[i1][0] == a[i1 + 1][0] &&
+					a[i1][1] < a[i1 + 1][1])
 				||
-				(R[0][i1] == R[0][i1 + 1] &&
-					R[1][i1] == R[1][i1 + 1] &&
-					R[2][i1] > R[2][i1 + 1]))
-				Change(R, i1, i1 + 1, rowCount);
+				(a[i1][0] == a[i1 + 1][0] &&
+					a[i1][1] == a[i1 + 1][1] &&
+					a[i1][3] > a[i1 + 1][3]))
+				Change(a, i1, i1 + 1, colCount);
 }
-void Change(int** R, const int col1, const int col2, const int rowCount)
+void Change(int** a, const int row1, const int row2, const int colCount)
 {
 	int tmp;
-	for (int j = 0; j < rowCount; j++)
+	for (int j = 0; j < colCount; j++)
 	{
-		tmp = R[j][col1];
-		R[j][col1] = R[j][col2];
-		R[j][col2] = tmp;
+		tmp = a[row1][j];
+		a[row1][j] = a[row2][j];
+		a[row2][j] = tmp;
 	}
 }
-void Filter(int** R, const int rowCount, const int colCount, int& S, int& k)
+void Calc(int** a, const int rowCount, const int colCount, int& S, int& k)
 {
 	S = 0;
 	k = 0;
 	for (int i = 0; i < rowCount; i++)
 		for (int j = 0; j < colCount; j++)
-			if (R[i][j] > 0 && !(i % 3 == 0 || j % 3 == 0))
+			if (a[i][j] % 2 == 0 || a[i][j] < 0)
 			{
-				S += R[i][j];
+				S += a[i][j];
 				k++;
-				R[i][j] = 0;
+				a[i][j] = 0;
 			}
 }
+
